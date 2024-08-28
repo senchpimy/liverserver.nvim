@@ -1,5 +1,5 @@
 local ffi = require("ffi")
-local example = ffi.load("/home/plof/Documents/lua/liveserver/lua/example.so")
+local example = ffi.load(script_path() .. "example.so")
 
 --local example = ffi.load("./example.so")
 ffi.cdef([[
@@ -15,16 +15,11 @@ function M.on_save()
   end
 end
 
-local buffer_to_string = function()
-  local content = vim.api.nvim_buf_get_lines(0, 0, vim.api.nvim_buf_line_count(0), false)
-  return table.concat(content, "\n")
-end
-
 local function serverStart()
   if not M.active then
     example.StartServer()
     M.active = true
-    print("Live server started")
+    print("Running Live Server")
     -- Create the global autocommand to trigger on every buffer save
     vim.api.nvim_create_autocmd('BufWritePost', {
       group = vim.api.nvim_create_augroup("liveServerGroup", { clear = true }),
@@ -39,5 +34,10 @@ end
 vim.api.nvim_create_user_command('Liveserver', function()
   serverStart()
 end, {})
+
+function script_path()
+  local str = debug.getinfo(2, "S").source:sub(2)
+  return str:match("(.*/)")
+end
 
 return M

@@ -20,15 +20,37 @@ var messages chan bool
 
 const injected_js = `
   <script>
-  var i = 0
-  var ws = new WebSocket("ws://localhost%s/ws");
-   ws.onmessage = function(event) {
+  let socket;
+
+    socket = new WebSocket("ws://localhost%s/ws");
+
+   socket.onmessage = function(event) {
     if (event.data === "reload") {
       //window.location.reload();
-  console.log("Actualizacion"+i)
-  i+=1
+  updateContent()
+    console.log("Reload")
     }
   };
+
+function updateContent() {
+    fetch('/')  // Replace with your endpoint
+        .then(response => response.text())
+        .then(data => {
+            var tag = document.getElementsByTagName('html');
+  for (const cell of tag){
+  cell.innerHTML=data;
+  }
+  reloadCSS();
+        });
+}
+
+function reloadCSS() {
+    const links = document.querySelectorAll('link[rel="stylesheet"]');
+    links.forEach(link => {
+        const href = link.getAttribute('href');
+        link.setAttribute('href', href.split('?')[0] + '?' + new Date().getTime());
+    });
+}
   </script>
 `
 
