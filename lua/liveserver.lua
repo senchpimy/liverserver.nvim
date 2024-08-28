@@ -1,3 +1,8 @@
+function script_path()
+  local str = debug.getinfo(2, "S").source:sub(2)
+  return str:match("(.*/)")
+end
+
 local ffi = require("ffi")
 local example = ffi.load(script_path() .. "example.so")
 
@@ -35,9 +40,5 @@ vim.api.nvim_create_user_command('Liveserver', function()
   serverStart()
 end, {})
 
-function script_path()
-  local str = debug.getinfo(2, "S").source:sub(2)
-  return str:match("(.*/)")
-end
 
 return M
