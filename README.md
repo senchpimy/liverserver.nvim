@@ -24,7 +24,7 @@ Add the following line to your Neovim configuration:
 {
   'senchpimy/liveserver.nvim',
   config = function()
-    vim.cmd([[ command! Liveserver lua require('liveserver').start() ]])
+      require('liveserver')
   end,
 }
 ```
