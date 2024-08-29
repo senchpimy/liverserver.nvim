@@ -105,6 +105,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 var upgrader = websocket.Upgrader{}
 
 func wsHandler(w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		fmt.Println("Error upgrading to WebSocket:", err)
